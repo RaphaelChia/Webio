@@ -10,10 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
+            android:name="com.example.mockquiz03.SecurityWorker"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
             android:name="com.example.mockquiz03.POSitService"
             android:enabled="true"
             android:exported="true" />
-
 
         <activity android:name="com.example.mockquiz03.MainActivity">
             <intent-filter>

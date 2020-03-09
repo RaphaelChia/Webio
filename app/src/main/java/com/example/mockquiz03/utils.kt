@@ -9,7 +9,7 @@ class utils{
        val NOTIFICATION_ID = 1000
        val GENERATOR_DELAY = 888L
 
-       var securityIters = 8888888
+       var securityIters = 88888
 
        fun generateRand():Long{
            return Random.nextLong(1000,9999)

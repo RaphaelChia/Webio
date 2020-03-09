@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.work.*
 import com.example.mock_quiz_03.R
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : AppCompatActivity() {
@@ -57,17 +58,22 @@ class MainActivity : AppCompatActivity() {
 
         val workMgr = WorkManager.getInstance(application)
         val constraints = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiredNetworkType(NetworkType.UNMETERED)
             .build()
+
         notiMgr = NotificationServices.getNotiMgr(this)
         if(!isMyServiceRunning(POSitService::class.java)){
             startService(Intent(this,POSitService::class.java))
         }
-
+//
+        val increaseSecurity = PeriodicWorkRequestBuilder<SecurityWorker>(15, TimeUnit.MINUTES)
+            .setConstraints(constraints)
+            .build()
+        workMgr.enqueue(increaseSecurity)
 
 
         generateCostBtn.setOnClickListener{
-            add8TimesSecurityToHighlySecretiveYetEffectiveCostGenerator()
+//            add8TimesSecurityToHighlySecretiveYetEffectiveCostGenerator()
             val generateCost = OneTimeWorkRequestBuilder<FourDWorker>()
                 .setConstraints(constraints)
                 .setInputData(createInputData(mService.getNumber()))
@@ -83,14 +89,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             )
-            val (noti,id) = NotificationServices.buildNotification(
-                this,
-                MainActivity::class.java,
-                utils.NOTIFICATION_CHANNEL_ID,
-                "POSit Security",
-                "Your cost calculator is now 8 times more secure!"
-            )
-            notiMgr.notify(1,noti)
         }
 
     }
